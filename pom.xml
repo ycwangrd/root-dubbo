@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.5.2</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.huayanginfo.dubbo</groupId>
+    <artifactId>root-dubbo</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>root-dubbo</name>
+    <packaging>pom</packaging>
+    <description>基于Dubbo的开发框架.</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <apache-dubbo.version>2.7.12</apache-dubbo.version>
+        <org-curator.version>4.3.0</org-curator.version>
+        <p6spy-p6spy.version>3.9.1</p6spy-p6spy.version>
+        <!-- 其他工具包 -->
+        <cn-huttol.version>5.7.3</cn-huttol.version>
+        <google-guava.version>30.1.1-jre</google-guava.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.huayanginfo.dubbo</groupId>
+                <artifactId>dubbo-api</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- Web框架支持 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- data-jpa的支持 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <!-- mysql数据库驱动 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <!-- 用于打印SQL的工具包 -->
+        <dependency>
+            <groupId>p6spy</groupId>
+            <artifactId>p6spy</artifactId>
+            <version>${p6spy-p6spy.version}</version>
+        </dependency>
+
+        <!-- Dubbo支持 -->
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+            <version>${apache-dubbo.version}</version>
+        </dependency>
+        <!-- 使用Nacos注册中心 -->
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-registry-nacos</artifactId>
+            <version>${apache-dubbo.version}</version>
+        </dependency>
+        <!-- zookeeper依赖包
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>3.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-x-discovery</artifactId>
+            <version>${org-curator.version}</version>
+        </dependency>
+         -->
+
+        <!-- 配置文件自动补全的支持 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- 常用工具类 start -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${cn-huttol.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${google-guava.version}</version>
+        </dependency>
+        <!-- 常用工具类 end -->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <!-- 配置文件配置插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-resources</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/classes</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- 编译插件 下面这段如果不加则会出带时间戳的jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <excludes>
+                        <exclude>**/rebel.xml</exclude>
+                    </excludes>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <!-- other annotation processors -->
+                    </annotationProcessorPaths>
+                    <!-- due to problem in maven-compiler-plugin, for verbose mode add showWarnings -->
+                    <showWarnings>true</showWarnings>
+                </configuration>
+            </plugin>
+            <!-- 创建原型的插件-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-archetype-plugin</artifactId>
+                <version>3.1.2</version>
+            </plugin>
+            <!-- maven命令跳过测试 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                    <excludes>
+                        <exclude>**/rebel.xml</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <!-- maven项目发布插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.0.0-M1</version>
+            </plugin>
+            <!-- maven打包插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <!-- 资源文件 -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <targetPath>${basedir}/target/classes</targetPath>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+                <excludes>
+                    <exclude>**/rebel.xml</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </build>
+    <!-- 发布的仓库地址 -->
+    <distributionManagement>
+        <repository>
+            <id>huayang-release</id>
+            <name>huayang-release</name>
+            <uniqueVersion>false</uniqueVersion>
+            <url>http://10.3.0.186:9991/repository/huayang-release/</url>
+        </repository>
+        <snapshotRepository>
+            <id>huayang-snapshot</id>
+            <name>huayang-snapshot</name>
+            <uniqueVersion>false</uniqueVersion>
+            <url>http://10.3.0.186:9991/repository/huayang-snapshot/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <!-- 组织和开发者信息 -->
+    <organization>
+        <name>北京华洋峻峰信息工程股份公司</name>
+        <url>https://www.huayanginfo.com</url>
+    </organization>
+    <url>https://www.huayanginfo.com</url>
+    <developers>
+        <developer>
+            <id>huayanginfo</id>
+            <name>Internet Products Department</name>
+            <timezone>8</timezone>
+        </developer>
+    </developers>
+</project>
